@@ -7,6 +7,9 @@
     "nightwatch.conf.*",
     "playwright.config.*"
   ],
+  // "exclude": [
+  //   "axios"
+  // ],
   "compilerOptions": {
     "composite": true,
     "noEmit": true,
