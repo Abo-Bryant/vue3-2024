@@ -1,13 +1,27 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { mobileRules, passwordRules } from '@/utils/rules'
-import { showToast } from 'vant'
+import { showSuccessToast, showToast } from 'vant'
+import { loginByPassword } from '@/services/user'
+import { useUserStore } from '@/stores'
+import { useRoute, useRouter } from 'vue-router'
+
 const mobile = ref('')
 const password = ref('')
 const agree = ref(false)
-const onSubmit = () => {
+
+const store = useUserStore()
+const router = useRouter()
+const route = useRoute()
+const onSubmit = async () => {
   if (!agree.value) return showToast('请勾选协议')
   console.log('login')
+  // 验证完毕，进行登录
+  const res = await loginByPassword(mobile.value, password.value)
+  store.setUser(res.data)
+  // 如果有回跳地址就进行回跳，没有跳转到个人中心
+  router.push((route.query.returnUrl as string) || '/user')
+  showSuccessToast('登录成功')
 }
 </script>
 
