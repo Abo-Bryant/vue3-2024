@@ -1,23 +1,38 @@
 <template>
+  <!-- 固定定位 左侧箭头 标题 右侧文字 -->
   <van-nav-bar
     fixed
     left-arrow
     :title="title"
     :right-text="rightText"
     @click-right="onClickRight"
+    @click-left="onClickLeft"
   ></van-nav-bar>
 </template>
 
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
+
+// 1.通过props来实现标题和右侧文字的设置
 defineProps<{
   title?: string
   rightText?: string
 }>()
+// 2.使用emit函数来触发自定义事件(点击右侧文字按钮)
 const emit = defineEmits<{
   (e: 'click-right'): void
 }>()
 const onClickRight = () => {
   emit('click-right')
+}
+// 3.回退,了解history.state信息,监听箭头的点击事件按条件进行跳转
+const router = useRouter()
+const onClickLeft = () => {
+  if (history.state?.back) {
+    router.back()
+  } else {
+    router.push('/')
+  }
 }
 </script>
 
