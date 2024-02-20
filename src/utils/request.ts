@@ -1,5 +1,6 @@
+import router from '@/router'
 import { useUserStore } from '@/stores'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { showToast } from 'vant'
 
 const instance = axios.create({
@@ -34,8 +35,18 @@ instance.interceptors.response.use(
     //  4. 摘取核心响应数据
     return res.data
   },
-  (err) => {
-    // TODO 5. 处理401错误
+  (err: AxiosError) => {
+    //  5. 处理401错误
+    if (err.response?.status === 401) {
+      // 删除用户信息
+      const store = useUserStore()
+      store.delUser()
+      // 跳转登录，带上接口失效所在页面的地址，登录完成后回跳使用
+      router.push({
+        path: '/login',
+        query: { returnUrl: router.currentRoute.value.fullPath }
+      })
+    }
     return Promise.reject(err)
   }
 )
