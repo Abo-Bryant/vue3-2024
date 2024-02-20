@@ -10,7 +10,9 @@ import { createRouter, createWebHistory } from 'vue-router'
 // vite.config.ts  添加配置  base: my-path，路由这就会加上 my-path 前缀了
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: []
+  routes: [
+    { path: '/login', component: () => import('@/views/Login/index.vue') }
+  ]
 })
 
 export default router
