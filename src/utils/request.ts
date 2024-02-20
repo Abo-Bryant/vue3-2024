@@ -53,13 +53,19 @@ instance.interceptors.response.use(
 
 export default instance
 
+type Data<T> = {
+  code: number
+  message: string
+  data: T
+}
+
 // 4. 请求工具函数
-export const request = (
+export const request = <T>(
   url: string,
   method: Method = 'GET',
   submitData?: object
 ) => {
-  return instance.request({
+  return instance.request<any, Data<T>>({
     url,
     method,
     [method.toUpperCase() === 'GET' ? 'params' : 'data']: submitData

@@ -3,6 +3,7 @@ import { Button as VanButton } from 'vant'
 import { useUserStore } from './stores'
 const store = useUserStore()
 import { request } from './utils/request'
+import type { User } from './types/user'
 const getUser = () => {
   // axios.request({
   //   url: 'patient/myUser',
@@ -20,7 +21,7 @@ const login = () => {
   //       password: 'abc12345'
   //     }
   //   })
-  request('login/password', 'POST', {
+  request<User>('login/password', 'POST', {
     mobile: '13211112222',
     password: 'abc12345'
   })
