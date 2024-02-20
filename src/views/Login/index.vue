@@ -1,6 +1,6 @@
 <template>
   <div class="login-page">
-    login
+    <cp-nav-bar></cp-nav-bar>
     <van-button>登录</van-button>
   </div>
 </template>
