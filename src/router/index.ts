@@ -1,3 +1,4 @@
+import { useUserStore } from '@/stores'
 import { createRouter, createWebHistory } from 'vue-router'
 // createRouter 创建路由实例，===> new VueRouter()
 // history 是路由模式，hash模式，history模式
@@ -30,6 +31,17 @@ const router = createRouter({
       ]
     }
   ]
+})
+
+// 全局的前置导航
+
+router.beforeEach((to) => {
+  // 获取token的
+  const store = useUserStore()
+  // 白名单
+  const whiteList = ['/login']
+  // 如果你没有token并且不在白名单里面,重定向到登录
+  if (!store.user?.token && !whiteList.includes(to.path)) return '/login'
 })
 
 export default router
