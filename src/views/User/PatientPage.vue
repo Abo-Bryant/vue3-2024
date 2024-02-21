@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { getPatientList } from '@/services/user'
-import type { PatientList } from '@/types/user'
+import type { PatientList, Patient } from '@/types/user'
+import { computed } from 'vue'
 import { ref, onMounted } from 'vue'
 
 // 组件挂载完毕,获取数据
@@ -19,8 +20,27 @@ const options = [
 // 2. 打开侧滑栏
 const show = ref(false)
 const showPopup = () => {
+  patient.value = { ...initPatient }
   show.value = true
 }
+const initPatient: Patient = {
+  name: '',
+  idCard: '',
+  gender: 1,
+  defaultFlag: 0
+}
+const patient = ref<Patient>({
+  ...initPatient
+})
+// 默认值需要转换
+const defaultFlag = computed({
+  get() {
+    return patient.value.defaultFlag === 1 ? true : false
+  },
+  set(value) {
+    patient.value.defaultFlag = value ? 1 : 0
+  }
+})
 onMounted(() => {
   loadList()
 })
@@ -67,17 +87,28 @@ onMounted(() => {
         :back="() => (show = false)"
       ></cp-nav-bar>
       <van-form autocomplete="off" ref="form">
-        <van-field label="真实姓名" placeholder="请输入真实姓名" />
-        <van-field label="身份证号" placeholder="请输入身份证号" />
+        <van-field
+          v-model="patient.name"
+          label="真实姓名"
+          placeholder="请输入真实姓名"
+        />
+        <van-field
+          v-model="patient.idCard"
+          label="身份证号"
+          placeholder="请输入身份证号"
+        />
         <van-field label="性别" class="pb4">
           <!-- 单选按钮组件 -->
           <template #input>
-            <cp-radio-btn :options="options"></cp-radio-btn>
+            <cp-radio-btn
+              v-model="patient.gender"
+              :options="options"
+            ></cp-radio-btn>
           </template>
         </van-field>
         <van-field label="默认就诊人">
           <template #input>
-            <van-checkbox :icon-size="18" round />
+            <van-checkbox v-model="defaultFlag" :icon-size="18" round />
           </template>
         </van-field>
       </van-form>
