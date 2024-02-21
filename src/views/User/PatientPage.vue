@@ -10,8 +10,12 @@ const loadList = async () => {
   const res = await getPatientList()
   list.value = res.data
 }
-const count = ref(10)
-
+// const count = ref(10)
+const options = [
+  { label: '男', value: 1 },
+  { label: '女', value: 0 }
+]
+const gender = ref(1)
 onMounted(() => {
   loadList()
 })
@@ -41,7 +45,14 @@ onMounted(() => {
       <div class="patient-tip">最多可添加 6 人</div>
 
       <!-- 测试 -->
-      <cp-radio-btn v-model:count="count"></cp-radio-btn>
+      <!-- v-model原始写法 -->
+      <!-- <cp-radio-btn
+        :options="options"
+        :modelValue="gender"
+        @update:modelValue="gender = $event"
+      ></cp-radio-btn> -->
+      <!-- v-model语法糖写法 -->
+      <cp-radio-btn :options="options" v-model="gender"></cp-radio-btn>
     </div>
   </div>
 </template>
