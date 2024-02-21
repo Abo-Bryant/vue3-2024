@@ -125,6 +125,10 @@ onUnmounted(() => {
       </div>
     </div>
   </div>
+  <svg aria-hidden="true">
+    <!-- #icon-文件夹名称-图片名称 -->
+    <use href="#icon-login-eye-off" />
+  </svg>
 </template>
 
 <style lang="scss" scoped>
