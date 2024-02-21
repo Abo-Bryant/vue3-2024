@@ -15,7 +15,12 @@ const options = [
   { label: '男', value: 1 },
   { label: '女', value: 0 }
 ]
-const gender = ref(1)
+// const gender = ref(1)
+// 2. 打开侧滑栏
+const show = ref(false)
+const showPopup = () => {
+  show.value = true
+}
 onMounted(() => {
   loadList()
 })
@@ -38,7 +43,7 @@ onMounted(() => {
         <div class="tag" v-if="item.defaultFlag === 1">默认</div>
       </div>
 
-      <div class="patient-add" v-if="list.length < 6">
+      <div class="patient-add" v-if="list.length < 6" @click="showPopup">
         <cp-icon name="user-add" />
         <p>添加患者</p>
       </div>
@@ -52,14 +57,45 @@ onMounted(() => {
         @update:modelValue="gender = $event"
       ></cp-radio-btn> -->
       <!-- v-model语法糖写法 -->
-      <cp-radio-btn :options="options" v-model="gender"></cp-radio-btn>
+      <!-- <cp-radio-btn :options="options" v-model="gender"></cp-radio-btn> -->
     </div>
+    <!-- 侧边栏 -->
+    <van-popup v-model:show="show" position="right">
+      <cp-nav-bar
+        title="添加患者"
+        right-text="保存"
+        :back="() => (show = false)"
+      ></cp-nav-bar>
+      <van-form autocomplete="off" ref="form">
+        <van-field label="真实姓名" placeholder="请输入真实姓名" />
+        <van-field label="身份证号" placeholder="请输入身份证号" />
+        <van-field label="性别" class="pb4">
+          <!-- 单选按钮组件 -->
+          <template #input>
+            <cp-radio-btn :options="options"></cp-radio-btn>
+          </template>
+        </van-field>
+        <van-field label="默认就诊人">
+          <template #input>
+            <van-checkbox :icon-size="18" round />
+          </template>
+        </van-field>
+      </van-form>
+    </van-popup>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .patient-page {
   padding: 46px 0 80px;
+  :deep() {
+    .van-popup {
+      width: 100%;
+      height: 100%;
+      padding-top: 46px;
+      box-sizing: border-box;
+    }
+  }
 }
 .patient-list {
   padding: 15px;
