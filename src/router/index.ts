@@ -12,22 +12,36 @@ import { createRouter, createWebHistory } from 'vue-router'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    { path: '/login', component: () => import('@/views/Login/index.vue') },
+    {
+      path: '/login',
+      component: () => import('@/views/Login/index.vue'),
+      meta: { title: '登录' }
+    },
     {
       path: '/',
       component: () => import('@/views/Layout/index.vue'),
       redirect: '/home',
       children: [
-        { path: '/home', component: () => import('@/views/Home/index.vue') },
+        {
+          path: '/home',
+          component: () => import('@/views/Home/index.vue'),
+          meta: { title: '首页' }
+        },
         {
           path: '/article',
-          component: () => import('@/views/Article/index.vue')
+          component: () => import('@/views/Article/index.vue'),
+          meta: { title: '健康百科' }
         },
         {
           path: '/notify',
-          component: () => import('@/views/Notify/index.vue')
+          component: () => import('@/views/Notify/index.vue'),
+          meta: { title: '消息通知' }
         },
-        { path: '/user', component: () => import('@/views/User/index.vue') }
+        {
+          path: '/user',
+          component: () => import('@/views/User/index.vue'),
+          meta: { title: '个人中心' }
+        }
       ]
     }
   ]
@@ -43,5 +57,7 @@ router.beforeEach((to) => {
   // 如果你没有token并且不在白名单里面,重定向到登录
   if (!store.user?.token && !whiteList.includes(to.path)) return '/login'
 })
-
+router.afterEach((to) => {
+  document.title = `${to.meta.title}-优医问诊`
+})
 export default router
