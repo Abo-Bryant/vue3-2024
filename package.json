@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@types/axios": "^0.14.0",
+    "@vueuse/core": "^10.8.0",
     "axios": "^1.6.7",
     "nprogress": "^0.2.0",
     "pinia": "^2.1.7",
