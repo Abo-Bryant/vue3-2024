@@ -2,13 +2,13 @@
 import { IllnessTime } from '@/enums'
 import { uploadImage } from '@/services/consult'
 import { useConsultStore } from '@/stores'
-import type { ConsultIllness } from '@/types/consult'
-import { showToast } from 'vant'
+import type { ConsultIllness, Image } from '@/types/consult'
+import { showConfirmDialog, showDialog, showToast } from 'vant'
 import type {
   UploaderAfterRead,
   UploaderFileListItem
 } from 'vant/lib/uploader/types'
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const timeOptions = [
@@ -29,7 +29,7 @@ const form = ref<ConsultIllness>({
   pictures: []
 })
 // 上传图片
-const fileList = ref([])
+const fileList = ref<Image[]>([])
 
 const onAfterRead: UploaderAfterRead = (item) => {
   // console.log('选择图片')
@@ -64,6 +64,7 @@ const disabled = computed(
 )
 const store = useConsultStore()
 const router = useRouter()
+// 点击下一步
 const next = () => {
   if (!form.value.illnessDesc) return showToast('请输入病情描述')
   if (form.value.illnessTime === undefined)
@@ -74,6 +75,20 @@ const next = () => {
   store.setIllness(form.value)
   router.push('/user/patient?isChange=1')
 }
+// 数据回显
+onMounted(() => {
+  if (store.consult.illnessDesc) {
+    showConfirmDialog({
+      title: '温馨提示',
+      message: '是否恢复您之前填写的病情信息呢?',
+      closeOnPopstate: false
+    }).then(() => {
+      const { illnessDesc, illnessTime, consultFlag, pictures } = store.consult
+      form.value = { illnessDesc, illnessTime, consultFlag, pictures }
+      fileList.value = pictures || []
+    })
+  }
+})
 </script>
 
 <template>
