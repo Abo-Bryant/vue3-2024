@@ -1,5 +1,6 @@
 import type { ConsultType } from '@/enums'
 import type { ConsultIllness, PartialConsult } from '@/types/consult'
+import { idCardRules } from '@/utils/rules'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
@@ -25,13 +26,16 @@ export const useConsultStore = defineStore(
     }
     // 记录患者id
     const setPatient = (id: string) => (consult.value.patientId = id)
+    // 记录优惠券
+    const setCoupon = (id: string) => (consult.value.couponId = id)
     return {
       consult,
       setType,
       setIllnessType,
       setDep,
       setIllness,
-      setPatient
+      setPatient,
+      setCoupon
     }
   },
   {
