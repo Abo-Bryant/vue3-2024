@@ -36,3 +36,9 @@ export const getConsultOrderPre = (params: ConsultOrderPreParams) =>
 // 生成订单
 export const createConsultOrder = (data: PartialConsult) =>
   request<{ id: string }>('/patient/consult/order', 'POST', data)
+// 获取支付地址  0 是微信  1 支付宝
+export const getConsultOrderPayUrl = (params: {
+  paymentMethod: 0 | 1
+  orderId: string
+  payCallback: string
+}) => request<{ payUrl: string }>('/patient/consult/pay', 'POST', params)
