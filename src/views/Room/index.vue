@@ -11,7 +11,7 @@ import { useRoute } from 'vue-router'
 import type { Message, TimeMessages } from '@/types/room'
 import { MsgType, OrderType } from '@/enums'
 import { ref, nextTick } from 'vue'
-import type { ConsultOrderItem } from '@/types/consult'
+import type { ConsultOrderItem, Image } from '@/types/consult'
 import { getConsultOrderDetail } from '@/services/consult'
 const consult = ref<ConsultOrderItem>()
 const loadConsult = async () => {
@@ -73,12 +73,21 @@ onMounted(() => {
 onUnmounted(() => {
   socket.close()
 })
-const sendText = (text: string) => {
+const onSendText = (text: string) => {
   socket.emit('sendChatMsg', {
     from: store.user?.id,
     to: consult.value?.docInfo?.id,
     msgType: MsgType.MsgText,
     msg: { content: text }
+  })
+}
+const onSendImage = (image: Image) => {
+  console.log(image)
+  socket.emit('sendChatMsg', {
+    from: store.user?.id,
+    to: consult.value?.docInfo?.id,
+    msgType: MsgType.MsgImage,
+    msg: { picture: image }
   })
 }
 </script>
@@ -99,7 +108,8 @@ const sendText = (text: string) => {
     ></room-message>
     <!-- 操作栏 -->
     <room-action
-      @send-text="sendText"
+      @send-text="onSendText"
+      @send-image="onSendImage"
       :disabled="consult?.status !== OrderType.ConsultChat"
     ></room-action>
   </div>
