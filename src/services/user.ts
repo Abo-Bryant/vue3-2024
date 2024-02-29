@@ -37,3 +37,6 @@ export const delPatient = (id: string) =>
 // 查询患者详情
 export const getPatientDetail = (id: string) =>
   request<Patient>(`/patient/info/${id}`)
+// 未读消息的数量
+export const getUnreadMessageCount = () =>
+  request<number>('/patient/message/unRead/all')
