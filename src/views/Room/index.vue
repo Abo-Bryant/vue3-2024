@@ -11,11 +11,19 @@ import { useRoute } from 'vue-router'
 import type { Message, TimeMessages } from '@/types/room'
 import { MsgType } from '@/enums'
 import { ref } from 'vue'
+import type { ConsultOrderItem } from '@/types/consult'
+import { getConsultOrderDetail } from '@/services/consult'
+const consult = ref<ConsultOrderItem>()
+const loadConsult = async () => {
+  const res = await getConsultOrderDetail(route.query.orderId as string)
+  consult.value = res.data
+}
 const store = useUserStore()
 const route = useRoute()
 const list = ref<Message[]>([])
 let socket: Socket
 onMounted(() => {
+  loadConsult()
   socket = io(baseURL, {
     auth: {
       token: `Bearer ${store.user?.token}`
@@ -52,6 +60,7 @@ onMounted(() => {
       list.value.unshift(...arr)
     })
   })
+  socket.on('statusChange', () => loadConsult())
 })
 onUnmounted(() => {
   socket.close()
