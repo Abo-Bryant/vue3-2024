@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { IllnessTime } from '@/enums'
 import { uploadImage } from '@/services/consult'
 import { useConsultStore } from '@/stores'
 import type { ConsultIllness, Image } from '@/types/consult'
-import { showConfirmDialog, showDialog, showToast } from 'vant'
+import { showConfirmDialog, showToast } from 'vant'
 import type {
   UploaderAfterRead,
   UploaderFileListItem
@@ -11,16 +10,7 @@ import type {
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
-const timeOptions = [
-  { label: '一周内', value: IllnessTime.Week },
-  { label: '一月内', value: IllnessTime.Month },
-  { label: '半年内', value: IllnessTime.HalfYear },
-  { label: '半年以上', value: IllnessTime.More }
-]
-const flagOptions = [
-  { label: '就诊过', value: 1 },
-  { label: '没就诊过', value: 0 }
-]
+import { timeOptions, flagOptions } from '@/services/constants'
 
 const form = ref<ConsultIllness>({
   illnessDesc: '',
