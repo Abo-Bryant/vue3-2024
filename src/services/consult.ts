@@ -49,3 +49,11 @@ export const getConsultOrderDetail = (orderId: string) =>
 // 获取处方图片的地址
 export const getPrescriptionPic = (id: string) =>
   request<{ url: string }>(`/patient/consult/prescription/${id}`)
+// 评价问诊
+export const evaluateConsultOrder = (data: {
+  docId: string
+  orderId: string
+  score: number
+  content: string
+  anonymousFlag: 0 | 1
+}) => request<{ id: string }>('/patient/order/evaluate', 'POST', data)
