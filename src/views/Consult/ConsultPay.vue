@@ -76,7 +76,7 @@ const onSubmit = async () => {
   orderId.value = res.data.id
   show.value = true
 }
-const paymentMethod = ref<0 | 1>()
+// const paymentMethod = ref<0 | 1>()
 
 onBeforeRouteLeave(() => {
   if (orderId.value) return false
@@ -100,19 +100,19 @@ const onClose = () => {
 }
 
 // 支付逻辑
-const pay = async () => {
-  if (paymentMethod.value === undefined) return showToast('请选择支付方式')
-  showLoadingToast({
-    message: '跳转支付',
-    duration: 0
-  })
-  const res = await getConsultOrderPayUrl({
-    orderId: orderId.value,
-    paymentMethod: paymentMethod.value,
-    payCallback: 'http://localhost:5173/room'
-  })
-  window.location.href = res.data.payUrl
-}
+// const pay = async () => {
+//   if (paymentMethod.value === undefined) return showToast('请选择支付方式')
+//   showLoadingToast({
+//     message: '跳转支付',
+//     duration: 0
+//   })
+//   const res = await getConsultOrderPayUrl({
+//     orderId: orderId.value,
+//     paymentMethod: paymentMethod.value,
+//     payCallback: 'http://localhost:5173/room'
+//   })
+//   window.location.href = res.data.payUrl
+// }
 </script>
 
 <template>
@@ -157,7 +157,13 @@ const pay = async () => {
       :loading="loading"
     />
     <!-- 支付抽屉,控制面板 -->
-    <van-action-sheet
+    <cp-pay-sheet
+      v-model:show="show"
+      :order-id="orderId"
+      :actual-payment="payInfo.actualPayment"
+      :on-close="onClose"
+    ></cp-pay-sheet>
+    <!-- <van-action-sheet
       v-model:show="show"
       title="选择支付方式"
       :close-on-popstate="false"
@@ -186,7 +192,7 @@ const pay = async () => {
           >
         </div>
       </div>
-    </van-action-sheet>
+    </van-action-sheet> -->
   </div>
   <div class="consult-pay-page" v-else>
     <cp-nav-bar title="支付" />
@@ -258,25 +264,25 @@ const pay = async () => {
     width: 160px;
   }
 }
-.pay-type {
-  .amount {
-    padding: 20px;
-    text-align: center;
-    font-size: 16px;
-    font-weight: bold;
-  }
-  .btn {
-    padding: 15px;
-  }
-  .van-cell {
-    align-items: center;
-    .cp-icon {
-      margin-right: 10px;
-      font-size: 18px;
-    }
-    .van-checkbox :deep(.van-checkbox__icon) {
-      font-size: 16px;
-    }
-  }
-}
+// .pay-type {
+//   .amount {
+//     padding: 20px;
+//     text-align: center;
+//     font-size: 16px;
+//     font-weight: bold;
+//   }
+//   .btn {
+//     padding: 15px;
+//   }
+//   .van-cell {
+//     align-items: center;
+//     .cp-icon {
+//       margin-right: 10px;
+//       font-size: 18px;
+//     }
+//     .van-checkbox :deep(.van-checkbox__icon) {
+//       font-size: 16px;
+//     }
+//   }
+// }
 </style>
