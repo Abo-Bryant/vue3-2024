@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { IllnessTime, MsgType } from '@/enums'
+import { MsgType } from '@/enums'
 import type { Message } from '@/types/room'
-import { timeOptions, flagOptions } from '@/services/constants'
 import type { Image } from '@/types/consult'
 import { showImagePreview, showToast } from 'vant'
 import { useUserStore } from '@/stores'
@@ -12,13 +11,7 @@ defineProps<{
   item: Message
 }>()
 
-// 获取患病时间
-const getIllnessTimeText = (time: IllnessTime) =>
-  timeOptions.find((item) => item.value === time)?.label
-
-// 获取是否就诊
-const getConsultFlagText = (flag: 0 | 1) =>
-  flagOptions.find((item) => item.value === flag)?.label
+import { getIllnessTimeText, getConsultFlagText } from '@/utils/filter'
 
 // 预览图片
 const onPreviewImage = (image?: Image[]) => {
