@@ -9,7 +9,9 @@ import type {
   ConsultOrderPreParams,
   ConsultOrderPreData,
   PartialConsult,
-  ConsultOrderItem
+  ConsultOrderItem,
+  ConsultOrderListParams,
+  ConsultOrderPage
 } from '@/types/consult'
 import { request } from '@/utils/request'
 
@@ -57,3 +59,6 @@ export const evaluateConsultOrder = (data: {
   content: string
   anonymousFlag: 0 | 1
 }) => request<{ id: string }>('/patient/order/evaluate', 'POST', data)
+// 获取问诊订单列表
+export const getConsultOrderList = (params: ConsultOrderListParams) =>
+  request<ConsultOrderPage>('/patient/consult/order/list', 'GET', params)
