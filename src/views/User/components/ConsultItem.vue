@@ -5,6 +5,7 @@ import { ref } from 'vue'
 import { computed } from 'vue'
 import { cancelOrder, deleteOrder } from '@/services/consult'
 import { showFailToast, showSuccessToast } from 'vant'
+import { useShowPrescription } from '@/composables'
 
 const props = defineProps<{ item: ConsultOrderItem }>()
 const showPopover = ref(false)
@@ -14,6 +15,9 @@ const actions = computed(() => [
   { text: '删除订单' }
 ])
 const onSelect = (action: { text: string }, i: number) => {
+  if (i === 0) {
+    onShowPrescription(props.item.prescriptionId)
+  }
   if (i === 1) {
     // 删除
     deleteConsultOrder(props.item)
@@ -52,6 +56,8 @@ const deleteConsultOrder = async (item: ConsultOrderItem) => {
     deleteLoading.value = false
   }
 }
+// 查看处方
+const { onShowPrescription } = useShowPrescription()
 </script>
 
 <template>
@@ -128,6 +134,7 @@ const deleteConsultOrder = async (item: ConsultOrderItem) => {
         plain
         size="small"
         round
+        @click="onShowPrescription(item.prescriptionId)"
       >
         查看处方
       </van-button>
