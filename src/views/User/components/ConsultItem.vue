@@ -2,27 +2,27 @@
 import type { ConsultOrderItem } from '@/types/consult'
 import { OrderType } from '@/enums'
 import { ref } from 'vue'
-import { computed } from 'vue'
 import { cancelOrder, deleteOrder } from '@/services/consult'
 import { showFailToast, showSuccessToast } from 'vant'
 import { useShowPrescription } from '@/composables'
-
-const props = defineProps<{ item: ConsultOrderItem }>()
-const showPopover = ref(false)
-// 一个数据依赖另外一个数据的时候 就要想到计算属性
-const actions = computed(() => [
-  { text: '查看处方', disabled: !props.item.prescriptionId },
-  { text: '删除订单' }
-])
-const onSelect = (action: { text: string }, i: number) => {
-  if (i === 0) {
-    onShowPrescription(props.item.prescriptionId)
-  }
-  if (i === 1) {
-    // 删除
-    deleteConsultOrder(props.item)
-  }
-}
+import ConsultMore from './ConsultMore.vue'
+defineProps<{ item: ConsultOrderItem }>()
+// // 更多操作
+// const showPopover = ref(false)
+// // 一个数据依赖另外一个数据的时候 就要想到计算属性
+// const actions = computed(() => [
+//   { text: '查看处方', disabled: !props.item.prescriptionId },
+//   { text: '删除订单' }
+// ])
+// const onSelect = (action: { text: string }, i: number) => {
+//   if (i === 0) {
+//     onShowPrescription(props.item.prescriptionId)
+//   }
+//   if (i === 1) {
+//     // 删除
+//     deleteConsultOrder(props.item)
+//   }
+// }
 
 // 取消订单
 const loading = ref(false)
@@ -149,16 +149,12 @@ const { onShowPrescription } = useShowPrescription()
       </van-button>
     </div>
     <div class="foot" v-if="item.status === OrderType.ConsultComplete">
-      <div class="more">
-        <van-popover
-          placement="top-start"
-          v-model:show="showPopover"
-          :actions="actions"
-          @select="onSelect"
-        >
-          <template #reference> 更多 </template>
-        </van-popover>
-      </div>
+      <!-- 更多组件 -->
+      <consult-more
+        :disabled="!item.prescriptionId"
+        @on-preview="onShowPrescription(item.prescriptionId)"
+        @on-delete="deleteConsultOrder(item)"
+      ></consult-more>
       <van-button
         class="gray"
         plain
