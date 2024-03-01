@@ -2,9 +2,9 @@
 import type { ConsultOrderItem } from '@/types/consult'
 import { OrderType } from '@/enums'
 import { ref } from 'vue'
-import { cancelOrder, deleteOrder } from '@/services/consult'
+import { deleteOrder } from '@/services/consult'
 import { showFailToast, showSuccessToast } from 'vant'
-import { useShowPrescription } from '@/composables'
+import { useCancelOrder, useShowPrescription } from '@/composables'
 import ConsultMore from './ConsultMore.vue'
 defineProps<{ item: ConsultOrderItem }>()
 // // 更多操作
@@ -25,20 +25,7 @@ defineProps<{ item: ConsultOrderItem }>()
 // }
 
 // 取消订单
-const loading = ref(false)
-const cancelConsultOrder = async (item: ConsultOrderItem) => {
-  try {
-    loading.value = true
-    await cancelOrder(item.id)
-    item.status = OrderType.ConsultCancel
-    item.statusValue = '已取消'
-    showSuccessToast('取消成功')
-  } catch (error) {
-    showFailToast('取消失败')
-  } finally {
-    loading.value = false
-  }
-}
+const { loading, cancelConsultOrder } = useCancelOrder()
 // 删除订单
 const emit = defineEmits<{
   (e: 'on-delete', id: string): void
