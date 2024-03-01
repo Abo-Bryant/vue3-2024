@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import {
   cancelOrder,
+  deleteOrder,
   followOrUnfollow,
   getPrescriptionPic
 } from '@/services/consult'
@@ -51,4 +52,22 @@ export const useCancelOrder = () => {
     }
   }
   return { loading, cancelConsultOrder }
+}
+// 删除订单
+export const useDeteleOrder = (cb: () => void) => {
+  const loading = ref(false)
+  const deleteConsultOrder = async (item: ConsultOrderItem) => {
+    try {
+      loading.value = true
+      await deleteOrder(item.id)
+      showSuccessToast('删除成功')
+      // emit('on-delete', item.id)
+      cb && cb()
+    } catch (error) {
+      showFailToast('删除失败')
+    } finally {
+      loading.value = false
+    }
+  }
+  return { loading, deleteConsultOrder }
 }

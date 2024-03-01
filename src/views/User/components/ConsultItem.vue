@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import type { ConsultOrderItem } from '@/types/consult'
 import { OrderType } from '@/enums'
-import { ref } from 'vue'
-import { deleteOrder } from '@/services/consult'
-import { showFailToast, showSuccessToast } from 'vant'
-import { useCancelOrder, useShowPrescription } from '@/composables'
+import {
+  useCancelOrder,
+  useDeteleOrder,
+  useShowPrescription
+} from '@/composables'
 import ConsultMore from './ConsultMore.vue'
-defineProps<{ item: ConsultOrderItem }>()
+const props = defineProps<{ item: ConsultOrderItem }>()
 // // 更多操作
 // const showPopover = ref(false)
 // // 一个数据依赖另外一个数据的时候 就要想到计算属性
@@ -26,23 +27,13 @@ defineProps<{ item: ConsultOrderItem }>()
 
 // 取消订单
 const { loading, cancelConsultOrder } = useCancelOrder()
-// 删除订单
 const emit = defineEmits<{
   (e: 'on-delete', id: string): void
 }>()
-const deleteLoading = ref(false)
-const deleteConsultOrder = async (item: ConsultOrderItem) => {
-  try {
-    deleteLoading.value = true
-    await deleteOrder(item.id)
-    showSuccessToast('删除成功')
-    emit('on-delete', item.id)
-  } catch (error) {
-    showFailToast('删除失败')
-  } finally {
-    deleteLoading.value = false
-  }
-}
+// 删除订单
+const { loading: deleteLoading, deleteConsultOrder } = useDeteleOrder(() => {
+  emit('on-delete', props.item.id)
+})
 // 查看处方
 const { onShowPrescription } = useShowPrescription()
 </script>
