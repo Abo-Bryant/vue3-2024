@@ -8,6 +8,10 @@ import {
 import type { ConsultOrderItem, FollowType } from '@/types/consult'
 import { showFailToast, showImagePreview, showSuccessToast } from 'vant'
 import { OrderType } from '@/enums'
+import type { OrderDetail } from '@/types/order'
+import { useRoute } from 'vue-router'
+import { onMounted } from 'vue'
+import { getMedicalOrderDetail } from '@/services/order'
 
 // 封装逻辑，规范 useXxx，表示使用某功能
 export const useFollow = (type: FollowType = 'doc') => {
@@ -70,4 +74,19 @@ export const useDeteleOrder = (cb: () => void) => {
     }
   }
   return { loading, deleteConsultOrder }
+}
+// 提取订单详情逻辑
+export const useOrderDetail = (id: string) => {
+  const order = ref<OrderDetail>()
+  const loading = ref(false)
+  onMounted(async () => {
+    try {
+      loading.value = true
+      const res = await getMedicalOrderDetail(id)
+      order.value = res.data
+    } finally {
+      loading.value = false
+    }
+  })
+  return { order, loading }
 }
