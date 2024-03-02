@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { MsgType } from '@/enums'
-import type { Message } from '@/types/room'
+import { MsgType, PrescriptionStatus } from '@/enums'
+import type { Message, Prescription } from '@/types/room'
 import type { Image } from '@/types/consult'
 import { showImagePreview, showToast } from 'vant'
 import { useUserStore } from '@/stores'
@@ -12,6 +12,7 @@ defineProps<{
 }>()
 
 import { getIllnessTimeText, getConsultFlagText } from '@/utils/filter'
+import { useRouter } from 'vue-router'
 
 // 预览图片
 const onPreviewImage = (image?: Image[]) => {
@@ -25,6 +26,16 @@ const formatTime = (time: string) => dayjs(time).format('HH:mm')
 
 // 查看处方
 const { onShowPrescription } = useShowPrescription()
+
+// 点击处方的跳转
+const router = useRouter()
+const buy = (pre?: Prescription) => {
+  if (!pre) return
+  if (pre.status === PrescriptionStatus.Invalid) return showToast('处方已失效')
+  if (pre.status === PrescriptionStatus.NotPayment && !pre.orderId)
+    return router.push(`/order/pay?id=${pre.id}`)
+  router.push(`/order/${pre.orderId}`)
+}
 </script>
 
 <template>
@@ -149,7 +160,9 @@ const { onShowPrescription } = useShowPrescription()
           <div class="num">x{{ med.quantity }}</div>
         </div>
       </div>
-      <div class="foot"><span>购买药品</span></div>
+      <div class="foot">
+        <span @click="buy(item.msg.prescription)">购买药品</span>
+      </div>
     </div>
   </div>
   <!-- 评价卡片，后期实现 -->
