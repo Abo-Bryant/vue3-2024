@@ -162,6 +162,7 @@ const onClose = () => {
       :order-id="orderId"
       :actual-payment="payInfo.actualPayment"
       :on-close="onClose"
+      pay-callback="/room"
     ></cp-pay-sheet>
     <!-- <van-action-sheet
       v-model:show="show"
