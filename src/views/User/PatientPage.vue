@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {
-  getPatientList,
   addPatient,
   editPatient,
-  delPatient
+  delPatient,
+  getPatientList
 } from '@/services/user'
 import { useConsultStore } from '@/stores'
 import type { PatientList, Patient } from '@/types/user'
@@ -12,7 +12,6 @@ import {
   showConfirmDialog,
   type FormInstance,
   showSuccessToast,
-  List,
   showToast
 } from 'vant'
 import { computed } from 'vue'
